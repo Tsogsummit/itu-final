@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zoo Page</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+
+    #animalImage {
+      width: 300px;
+      height: 200px;
+      margin: 20px;
+    }
+    /* #textToRead {
+      resize: none;
+    } */
+  </style>
+</head>
+<body>
+
+<h1>Welcome to the Zoo!</h1>
+<h2 id="textToRead">Press 1, 2, or 3 on your keyboard to see different animals.</h2>
+<img id="animalImage" src="" alt="Animal Image">
+
+
+<script>
+  const animalImages = [
+    "/assets/lion.jpeg",  // Replace with the actual image file names
+    "/assets/elephant.jpeg",
+    "/assets/monkey.jpeg"
+  ];
+
+  const animalNames = [
+    "lion",
+    "elephant",
+    "monkey"
+  ];
+
+  let currentAnimalIndex = 0;
+  const animalImageElement = document.getElementById('animalImage');
+  const textToRead = document.getElementById('textToRead');
+  const readButton = document.getElementById('readButton');
+
+  document.addEventListener('keydown', function(event) {
+    switch (event.key) {
+      case '1':
+        showAnimal(0);
+        break;
+      case '2':
+        showAnimal(1);
+        break;
+      case '3':
+        showAnimal(2);
+        break;
+      default:
+        break;
+    }
+  });
+
+  function showAnimal(index) {
+    if (index >= 0 && index < animalImages.length) {
+      currentAnimalIndex = index;
+      const imageUrl = animalImages[currentAnimalIndex];
+      const animalName = animalNames[currentAnimalIndex];
+      animalImageElement.src = imageUrl;
+      textToRead.value = `You selected ${animalName}.`;
+      speakText(`You selected ${animalName}.`);
+    }
+  }
+
+  // Initial display
+  showAnimal(currentAnimalIndex);
+
+  readButton.addEventListener('click', () => {
+    speakText(`You selected ${animalNames[currentAnimalIndex]}.`);
+  });
+
+  function speakText(text) {
+    const message = new SpeechSynthesisUtterance(text);
+    window.speechSynthesis.speak(message);
+  }
+</script>
+
+</body>
+</html>
