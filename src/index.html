@@ -76,6 +76,44 @@
     }
   });
 
+  async function synthesize(text) {
+    const url = "https://api.chimege.com/v1.2/synthesize";
+    const headers = {
+        'Content-Type': 'text/plain',
+        'Token': 'API_TOKEN',
+    };
+
+    const encoder = new TextEncoder();
+    const textEncoded = encoder.encode(text);
+
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: headers,
+        body: textEncoded,
+    });
+
+    const data = await response.arrayBuffer();
+    
+    const outputBuffer = new Uint8Array(data);
+    const outputArray = Array.from(outputBuffer);
+
+    // Assuming you are running this in a browser environment
+    const blob = new Blob([new Uint8Array(outputArray)], { type: 'audio/wav' });
+    const urlObject = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = urlObject;
+    a.download = 'output.wav';
+    a.click();
+}
+
+// Example usage with a dynamic text content
+const text = "Сайн байна уу";
+synthesize(text);
+
+
+
+
   function showAnimal(index) {
     if (index >= 0 && index < animalImages.length) {
       currentAnimalIndex = index;
@@ -85,14 +123,16 @@
       animalImageElement.src = imageUrl;
       textToRead.value = `You selected ${animalName}.`;
       speakText(`You selected ${animalName}.`);
+      const text = "Сайн байна уу";
+      synthesize(text);
     }
   }
 
   showAnimal(currentAnimalIndex);
 
   function speakText(text) {
-    const message = new SpeechSynthesisUtterance(text);
-    window.speechSynthesis.speak(message);
+    // const message = new SpeechSynthesisUtterance(text);
+    // window.speechSynthesis.speak(message);
   }
 </script>
 
